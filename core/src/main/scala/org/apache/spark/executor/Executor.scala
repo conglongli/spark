@@ -183,7 +183,7 @@ private[spark] class Executor(
       val deserializeStartTime = System.currentTimeMillis()
       Thread.currentThread.setContextClassLoader(replClassLoader)
       val ser = env.closureSerializer.newInstance()
-      val taskSize = Task.limit
+      val taskSize = serializedTask.limit
       logInfo(s"Running $taskName $taskSize bytes (TID $taskId)")
       execBackend.statusUpdate(taskId, TaskState.RUNNING, EMPTY_BYTE_BUFFER)
       var taskStart: Long = 0
