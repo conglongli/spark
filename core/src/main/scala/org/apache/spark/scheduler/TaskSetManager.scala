@@ -625,8 +625,10 @@ private[spark] class TaskSetManager(
       tasks(index), Success, result.value(), result.accumUpdates, info, result.metrics)
     if (!successful(index)) {
       tasksSuccessful += 1
-      logInfo("Finished task %s in stage %s (TID %d) in %d ms on %s (%d/%d)".format(
-        info.id, taskSet.id, info.taskId, info.duration, info.host, tasksSuccessful, numTasks))
+      val serializedDirectResult = ser.serialize(directResult)
+      val resultSize = serializedDirectResult.limit
+      logInfo("Finished task %s in stage %s (TID %d) in %d ms %d bytes on %s (%d/%d)".format(
+        info.id, taskSet.id, info.taskId, info.duration, resultSize, info.host, tasksSuccessful, numTasks))
       // Mark successful and stop if all the tasks have succeeded.
       successful(index) = true
       if (tasksSuccessful == numTasks) {
